@@ -6,6 +6,8 @@ import java.util.List;
 
 public interface CarsService {
 
-    Boolean saveCars(Cars cars);
+    Boolean saveCars();
+
+    Boolean updateCars (Long id, Cars cars);
 
 }

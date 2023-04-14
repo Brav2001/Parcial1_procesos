@@ -30,21 +30,33 @@ public class CarsController {
     @Autowired
     CarsServiceImp carsServiceImp;
     @GetMapping("/saveCars")
-    public List<CarsApi> saveCars() {
-        String url="https://myfakeapi.com/api/cars/";
-        CarsApi carsApi = restTemplate.getForObject(url, CarsApi.class);
-        for (Cars cars : carsApi.getCars()) {
-
-            Boolean res = carsServiceImp.saveCars(cars);
-            Map response = new HashMap();
-            if(res==true){
-                System.out.println("registrado");;
-            }else{
-                response.put("status", "400");
-                response.put("message", "No se guardo el usuario");
-            }
+    public ResponseEntity saveCars() {
+        boolean res= carsServiceImp.saveCars();
+        Map response = new HashMap();
+        if(res==true){
+            response.put("status", "201");
+            response.put("message", "Se registraron todos los carros");
+            return new ResponseEntity(response,HttpStatus.CREATED);
+        }else{
+            response.put("status", "500");
+            response.put("message", "No se registraron los carro");
+            return new ResponseEntity(response,HttpStatus.INTERNAL_SERVER_ERROR);
         }
-        return Arrays.asList(carsApi);
+    }
+    @PutMapping(value = "/updateCar/{id}")
+    public ResponseEntity updateCar(@PathVariable Long id,@RequestBody Cars cars){
+        Boolean res = carsServiceImp.updateCars(id,cars);
+        Map response = new HashMap();
+        if(res==true){
+            response.put("status", "200");
+            response.put("message", "Se actualizó el carro");
+            return new ResponseEntity(response, HttpStatus.OK) ;
+        }else{
+            response.put("status", "400");
+            response.put("message", "No se actualizó el carro");
+            return new ResponseEntity(response, HttpStatus.BAD_REQUEST);
+        }
+
     }
 
 

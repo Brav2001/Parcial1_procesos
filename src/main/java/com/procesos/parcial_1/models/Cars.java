@@ -15,7 +15,6 @@ public class Cars {
     @Id
     private Long id;
     private String car;
-
     private String car_model;
     private String car_color;
     private Long car_model_year;
