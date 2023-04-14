@@ -29,6 +29,9 @@ public class CarsController {
     }
     @Autowired
     CarsServiceImp carsServiceImp;
+
+    /* METODO GUARDAR CARROS CREATE */
+
     @GetMapping("/saveCars")
     public ResponseEntity saveCars() {
         boolean res= carsServiceImp.saveCars();
@@ -43,6 +46,8 @@ public class CarsController {
             return new ResponseEntity(response,HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
+
+    /* METODO ACTUALIZAR CARROS POR ID UPDATEBYID*/
     @PutMapping(value = "/updateCar/{id}")
     public ResponseEntity updateCar(@PathVariable Long id,@RequestBody Cars cars){
         Boolean res = carsServiceImp.updateCars(id,cars);
@@ -59,5 +64,32 @@ public class CarsController {
 
     }
 
+    /* METODO CONSULTAR CARROS POR ID GETBYID */
+
+    @GetMapping(value = "/cars/{id}")
+    public ResponseEntity findCarsById(@PathVariable Long id){
+        Map response = new HashMap();
+        try{
+            return new ResponseEntity(carsServiceImp.getCars(id), HttpStatus.OK) ;
+        }catch(Exception e) {
+            response.put("status", "404");
+            response.put("message", "No se encontro el carro");
+            return new ResponseEntity(response, HttpStatus.NOT_FOUND);
+        }
+    }
+
+    /* METODO CONSULTAR TODOS LOS CARROS GETALL */
+
+    @GetMapping(value = "/cars" )
+    public ResponseEntity Cars(){
+        Map response = new HashMap();
+        try{
+            return new ResponseEntity(carsServiceImp.allCars(), HttpStatus.OK) ;
+        }catch(Exception e) {
+            response.put("status", "404");
+            response.put("message", "No hay carros");
+            return new ResponseEntity(response, HttpStatus.NOT_FOUND);
+        }
+    }
 
 }

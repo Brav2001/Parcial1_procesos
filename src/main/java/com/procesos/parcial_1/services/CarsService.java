@@ -10,4 +10,8 @@ public interface CarsService {
 
     Boolean updateCars (Long id, Cars cars);
 
+    Cars getCars(Long id);
+
+    List <Cars> allCars();
+
 }
