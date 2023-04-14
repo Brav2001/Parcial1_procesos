@@ -20,5 +20,14 @@ public class CarsServiceImp implements CarsService{
             return false;
         }
     }
+    public Cars getCars(Long id){
+
+        return carsRepository.findById(id).get();
+    }
+
+    @Override
+    public List<Cars> allCars() {
+        return carsRepository.findAll();
+    }
 
 }

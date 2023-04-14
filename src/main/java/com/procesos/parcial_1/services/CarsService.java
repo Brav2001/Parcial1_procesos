@@ -8,4 +8,8 @@ public interface CarsService {
 
     Boolean saveCars(Cars cars);
 
+    Cars getCars(Long id);
+
+    List <Cars> allCars();
+
 }
