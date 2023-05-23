@@ -7,6 +7,7 @@ import com.procesos.parcial_1.models.Cars;
 import com.procesos.parcial_1.models.CarsApi;
 import com.procesos.parcial_1.repository.CarsRepository;
 import com.procesos.parcial_1.services.CarsServiceImp;
+import com.procesos.parcial_1.services.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -30,12 +31,21 @@ public class CarsController {
     @Autowired
     CarsServiceImp carsServiceImp;
 
+    @Autowired
+    UserService userService;
+
     /* METODO GUARDAR CARROS CREATE */
 
     @GetMapping("/saveCars")
-    public ResponseEntity saveCars() {
-        boolean res= carsServiceImp.saveCars();
+    public ResponseEntity saveCars(@RequestHeader(value="Authorization") String token) {
         Map response = new HashMap();
+        if(!userService.Auth(token.substring(7))){
+            response.put("status", "401");
+            response.put("message", "Token invalido");
+            return new ResponseEntity(response, HttpStatus.UNAUTHORIZED);
+        }
+        boolean res= carsServiceImp.saveCars();
+
         if(res==true){
             response.put("status", "201");
             response.put("message", "Se registraron todos los carros");
@@ -49,9 +59,15 @@ public class CarsController {
 
     /* METODO ACTUALIZAR CARROS POR ID UPDATEBYID*/
     @PutMapping(value = "/updateCar/{id}")
-    public ResponseEntity updateCar(@PathVariable Long id,@RequestBody Cars cars){
-        Boolean res = carsServiceImp.updateCars(id,cars);
+    public ResponseEntity updateCar(@RequestHeader(value="Authorization") String token,@PathVariable Long id,@RequestBody Cars cars){
         Map response = new HashMap();
+        if(!userService.Auth(token.substring(7))){
+            response.put("status", "401");
+            response.put("message", "Token invalido");
+            return new ResponseEntity(response, HttpStatus.UNAUTHORIZED);
+        }
+        Boolean res = carsServiceImp.updateCars(id,cars);
+
         if(res==true){
             response.put("status", "200");
             response.put("message", "Se actualizó el carro");
@@ -67,9 +83,15 @@ public class CarsController {
     /* METODO CONSULTAR CARROS POR ID GETBYID */
 
     @GetMapping(value = "/cars/{id}")
-    public ResponseEntity findCarsById(@PathVariable Long id){
+    public ResponseEntity findCarsById(@RequestHeader(value="Authorization") String token,@PathVariable Long id){
+
         Map response = new HashMap();
         try{
+            if(!userService.Auth(token.substring(7))){
+                response.put("status", "401");
+                response.put("message", "Token invalido");
+                return new ResponseEntity(response, HttpStatus.UNAUTHORIZED);
+            }
             return new ResponseEntity(carsServiceImp.getCars(id), HttpStatus.OK) ;
         }catch(Exception e) {
             response.put("status", "404");
@@ -81,9 +103,15 @@ public class CarsController {
     /* METODO CONSULTAR TODOS LOS CARROS GETALL */
 
     @GetMapping(value = "/cars" )
-    public ResponseEntity Cars(){
+    public ResponseEntity Cars(@RequestHeader(value="Authorization") String token){
+
         Map response = new HashMap();
         try{
+            if(!userService.Auth(token.substring(7))){
+                response.put("status", "401");
+                response.put("message", "Token invalido");
+                return new ResponseEntity(response, HttpStatus.UNAUTHORIZED);
+            }
             return new ResponseEntity(carsServiceImp.allCars(), HttpStatus.OK) ;
         }catch(Exception e) {
             response.put("status", "404");
