@@ -44,6 +44,7 @@ public class UserController {
             return new ResponseEntity(apiResponse, HttpStatus.BAD_REQUEST);
         }
     }
+
     @GetMapping(value = "" )
     public ResponseEntity Users(){
         try{
